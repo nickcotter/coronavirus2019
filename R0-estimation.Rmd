@@ -65,8 +65,9 @@ summary(estimatedR)
 We can plot the actual and predicted values using the "time dependent" method:
 
 ```{r plot-predictions, echo=FALSE}
-plot(dailyCountAndPrediction$day, dailyCountAndPrediction$count, xlab="days",ylab="count")
+plot(dailyCountAndPrediction$day, dailyCountAndPrediction$count, xlab="days",ylab="count", col="red")
 lines(dailyCountAndPrediction$day, dailyCountAndPrediction$prediction, col="green")
+legend(1, max(dailyCountAndPrediction$count)-10, legend=c("Actual", "TD"), col=c("red", "green"), lty=c(0,1), pch=c(1,NA), cex=0.8)
 ```
 
 Finally, here is a plot of estimated reproduction number (using the time-dependent method) over time:
