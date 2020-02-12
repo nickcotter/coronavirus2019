@@ -1,5 +1,7 @@
 ---
 title: "R0 Estimation"
+author: "Nick Cotter"
+date: "12/02/2020"
 output: html_notebook
 ---
 
@@ -12,6 +14,7 @@ library(R0)
 ```
 
 Here I take the [R0 package](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3582628/) to estimate the reproduction number for COVID-19.
+
 
 Load the data from the [2019 Novel Coronavirus COVID-19 (2019-nCoV) Data Repository by Johns Hopkins CSSE](https://github.com/CSSEGISandData/COVID-19):
 
