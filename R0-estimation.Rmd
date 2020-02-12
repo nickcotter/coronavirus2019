@@ -2,12 +2,15 @@
 title: "R0 Estimation"
 author: "Nick Cotter"
 date: "12/02/2020"
-output: html_notebook
+output: 
+      html_document:
+        keep_md: yes
 ---
 
 ```{r libraries, warning=FALSE, message=FALSE, echo=FALSE}
 library(tidyverse)
 library(lubridate)
+library(dplyr)
 library(knitr)
 library(arsenal)
 library(R0)
@@ -101,6 +104,8 @@ The time-dependent method seems to fit the best. Here are the RMSE values for th
 
 kable(methodError)
 ```
+
+
 Here is the range of the reproduction number thus estimated using the "time dependendent" method:
 
 ```{r td-estimate-summary, warning=FALSE, message=FALSE, echo=FALSE}
