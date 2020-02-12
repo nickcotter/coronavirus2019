@@ -1,7 +1,17 @@
+---
+title: "R0 Estimation"
+output: html_notebook
+---
+
+```{r libraries, warning=FALSE, message=FALSE}
 library(tidyverse)
 library(lubridate)
+library(knitr)
+library(arsenal)
 library(R0)
+```
 
+```{r tidydata}
 confirmed <- read.csv(url("https://raw.githubusercontent.com/CSSEGISandData/2019-nCoV/master/time_series/time_series_2019-ncov-Confirmed.csv"))
 
 sums <- colSums(confirmed[,-match(c("Province.State", "Country.Region", "Lat", "Long"), names(confirmed))], na.rm=TRUE)
@@ -18,8 +28,10 @@ dailyCounts <- aggregate(sumsByDate$count, by=list(as.Date(sumsByDate$datetime))
 colnames(dailyCounts) <- c("date", "count")
 
 dailyCounts$day <- seq.int(nrow(dailyCounts))
+```
 
 
+```{r estimates, warning=FALSE, message=FALSE}
 mgt <- generation.time("gamma", c(8.4, 3.8))
 
 est <- estimate.R(dailyCounts$count, methods=c("TD", "EG", "ML", "SB"), GT=mgt)
@@ -27,14 +39,18 @@ est <- estimate.R(dailyCounts$count, methods=c("TD", "EG", "ML", "SB"), GT=mgt)
 dailyCountAndPrediction <- merge(dailyCounts, est$estimates$TD$pred, by="row.names", sort=FALSE, all=TRUE)
 names(dailyCountAndPrediction)[5] <- "prediction"
 
+estimatedR <- est$estimates$TD$R[1:length(est$estimates$TD$R)-1]
+summary(estimatedR)
+```
 
+```{r plot-predictions}
 plot(dailyCountAndPrediction$day, dailyCountAndPrediction$count, xlab="days",ylab="count")
 lines(dailyCountAndPrediction$day, dailyCountAndPrediction$prediction, col="green")
+```
 
-estimatedR <- est$estimates$TD$R[1:length(est$estimates$TD$R)-1]
+```{r plot-estimates}
+plot(estimatedR, xlab="days", ylab="R", ylim=c(0,20), yaxt="n")
+abline(h=1, col="gray60")
+axis(2, at=seq(0:max(estimatedR)))
+```
 
-summary(estimatedR)
-
-# plot(estimatedR, xlab="days", ylab="R", ylim=c(0,20), yaxt="n")
-# abline(h=1, col="gray60")
-# axis(2, at=seq(0:max(estimatedR)))
