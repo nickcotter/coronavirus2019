@@ -13,7 +13,7 @@ library(arsenal)
 library(R0)
 ```
 
-Here I take the [R0 package](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3582628/) to estimate the reproduction number for COVID-19.
+Here I take the [R0 package](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3582628/) to estimate the reproduction number for COVID-19. NOTE: my aim is to investigate the R0 package rather than provide sound predictions of COVID-19's future behaviour. In particular I have guessed the generation time.
 
 
 Load the data from the [2019 Novel Coronavirus COVID-19 (2019-nCoV) Data Repository by Johns Hopkins CSSE](https://github.com/CSSEGISandData/COVID-19):
@@ -44,7 +44,7 @@ dailyCounts$day <- seq.int(nrow(dailyCounts))
 ```
 
 
-Now use the R0 package to estimate the reproduction number. I need a generation time, which we don't have to hand, so I take the values use for SARS - a mean of 8.4, standard deviation 3.8 - as [described here](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3816335/).
+Now use the R0 package to estimate the reproduction number. I need a generation time, which we don't have to hand, so I take the values use for SARS - a mean of 8.4, standard deviation 3.8 - as [described here](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3816335/). The different estimation methods (time dependent, exponential growth etc.) are described there too.
 
 ```{r estimates, warning=FALSE, message=FALSE}
 mgt <- generation.time("gamma", c(8.4, 3.8))
@@ -52,28 +52,72 @@ mgt <- generation.time("gamma", c(8.4, 3.8))
 est <- estimate.R(dailyCounts$count, methods=c("TD", "EG", "ML", "SB"), GT=mgt)
 ```
 
-Here is the range of the reproduction number thus estimated using the "time dependendent" method:
 
 ```{r merge-data, warning=FALSE, message=FALSE, echo=FALSE}
 dailyCountAndPrediction <- merge(dailyCounts, est$estimates$TD$pred, by="row.names", sort=FALSE, all=TRUE)
-names(dailyCountAndPrediction)[5] <- "prediction"
+dailyCountAndPrediction <- dailyCountAndPrediction[-c(1)]
+names(dailyCountAndPrediction)[4] <- "TD"
 
-estimatedR <- est$estimates$TD$R[1:length(est$estimates$TD$R)-1]
-summary(estimatedR)
+dailyCountAndPrediction <- merge(dailyCountAndPrediction, est$estimates$EG$pred, by="row.names", sort=FALSE, all=TRUE)
+dailyCountAndPrediction <- dailyCountAndPrediction[-c(1)]
+names(dailyCountAndPrediction)[5] <- "EG"
+
+dailyCountAndPrediction <- merge(dailyCountAndPrediction, est$estimates$ML$pred, by="row.names", sort=FALSE, all=TRUE)
+dailyCountAndPrediction <- dailyCountAndPrediction[-c(1)]
+names(dailyCountAndPrediction)[6] <- "ML"
+
+dailyCountAndPrediction <- merge(dailyCountAndPrediction, est$estimates$SB$pred, by="row.names", sort=FALSE, all=TRUE)
+dailyCountAndPrediction <- dailyCountAndPrediction[-c(1)]
+names(dailyCountAndPrediction)[7] <- "SB"
 ```
 
-We can plot the actual and predicted values using the "time dependent" method:
+```{r add-rmse, echo=FALSE}
+
+RMSE = function(m, o){
+  sqrt(mean((m - o)^2))
+}
+
+methodError <- dailyCountAndPrediction %>%
+                  summarise(TD=RMSE(TD,count), EG=RMSE(EG,count), ML=RMSE(ML,count), SB=RMSE(SB,count))
+
+```
+
+
+
+We can plot the actual and predicted values using the different estimation methods:
 
 ```{r plot-predictions, echo=FALSE}
 plot(dailyCountAndPrediction$day, dailyCountAndPrediction$count, xlab="days",ylab="count", col="red")
-lines(dailyCountAndPrediction$day, dailyCountAndPrediction$prediction, col="green")
-legend(1, max(dailyCountAndPrediction$count)-10, legend=c("Actual", "TD"), col=c("red", "green"), lty=c(0,1), pch=c(1,NA), cex=0.8)
+lines(dailyCountAndPrediction$day, dailyCountAndPrediction$TD, col="green")
+lines(dailyCountAndPrediction$day, dailyCountAndPrediction$EG, col="blue")
+lines(dailyCountAndPrediction$day, dailyCountAndPrediction$ML, col="purple")
+lines(dailyCountAndPrediction$day, dailyCountAndPrediction$SB, col="orange")
+legend(1, max(dailyCountAndPrediction$count)-10, legend=c("Actual", "TD", "EG", "ML", "SB"), col=c("red", "green", "blue", "purple", "orange"), lty=c(0,1,1,1,1), pch=c(1,NA,NA,NA,NA), cex=0.8)
+```
+
+The time-dependent method seems to fit the best. Here are the RMSE values for the different methods:
+
+```{r summarise-error, echo=FALSE}
+
+kable(methodError)
+```
+Here is the range of the reproduction number thus estimated using the "time dependendent" method:
+
+```{r td-estimate-summary, warning=FALSE, message=FALSE, echo=FALSE}
+estimatedR <- est$estimates$TD$R[1:length(est$estimates$TD$R)-1]
+summary(estimatedR)
 ```
 
 Finally, here is a plot of estimated reproduction number (using the time-dependent method) over time:
 
 ```{r plot-estimates, echo=FALSE}
-plot(estimatedR, xlab="days", ylab="R", ylim=c(0,20), yaxt="n")
+estDf <- as.data.frame(estimatedR)
+colnames(estDf) <- c("R")
+estDf$day <- rownames(estDf)
+lf <- loess(R ~ day, estDf)
+
+plot(estDf$day, estDf$R, xlab="days", ylab="R", ylim=c(0,20), yaxt="n")
+#lines(estDf$day, predict(lf), col = "blue")
 abline(h=1, col="gray60")
 axis(2, at=seq(0:max(estimatedR)))
 ```
