@@ -65,9 +65,9 @@ We can plot the actual and predicted values using the different estimation metho
 The time-dependent method seems to fit the best. Here are the RMSE values for the different methods:
 
 
-      TD        EG         ML         SB
---------  --------  ---------  ---------
- 3628.41   4870.61   9210.198   36645.12
+       TD         EG         ML         SB
+---------  ---------  ---------  ---------
+ 3340.986   3962.345   8101.392   35212.08
 
 
 Here is the range of the reproduction number thus estimated using the "time dependendent" method:
@@ -75,7 +75,7 @@ Here is the range of the reproduction number thus estimated using the "time depe
 
 ```
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##   1.941   2.328   3.308   4.865   5.458  17.548
+##   2.459   2.583   3.353   5.007   5.466  17.549
 ```
 
 Finally, here is a plot of estimated reproduction number (using the time-dependent method) over time:
