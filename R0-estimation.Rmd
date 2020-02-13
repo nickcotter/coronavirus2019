@@ -1,7 +1,7 @@
 ---
 title: "R0 Estimation"
 author: "Nick Cotter"
-date: "12/02/2020"
+date: "13/02/2020"
 output: 
       html_document:
         keep_md: yes
@@ -127,3 +127,4 @@ abline(h=1, col="gray60")
 axis(2, at=seq(0:max(estimatedR)))
 ```
 
+At this time it seems to be tending towards some value between 2 and 3.

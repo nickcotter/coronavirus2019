@@ -1,7 +1,7 @@
 ---
 title: "R0 Estimation"
 author: "Nick Cotter"
-date: "12/02/2020"
+date: "13/02/2020"
 output: 
       html_document:
         keep_md: yes
@@ -82,3 +82,4 @@ Finally, here is a plot of estimated reproduction number (using the time-depende
 
 ![](R0-estimation_files/figure-html/plot-estimates-1.png)<!-- -->
 
+At this time it seems to be tending towards some value between 2 and 3.
