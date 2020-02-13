@@ -1,7 +1,11 @@
 ---
 title: "R0 Estimation"
 author: "Nick Cotter"
-date: "13/02/2020"
+date: "`r Sys.Date()`"
+knit: (function(inputFile, encoding) { 
+      rmarkdown::render(inputFile,
+                        encoding=encoding, 
+                        output_file=file.path(dirname(inputFile), 'docs', 'index.html')) })
 output: 
       html_document:
         keep_md: yes
