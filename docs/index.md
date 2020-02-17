@@ -25,9 +25,7 @@ Load the data from the [2019 Novel Coronavirus COVID-19 (2019-nCoV) Data Reposit
 confirmed <- read.csv(url("https://raw.githubusercontent.com/CSSEGISandData/2019-nCoV/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv"))
 ```
 
-This data contains a row per state/province and a column per reported case numbers - on a particular date and time. There may be more than report per day at different times for a given location. 
-
-Let's transform this into a daily count using the last total count for each day:
+This data contains a row per state/province and a column per reported case numbers - on a particular date. Let's tidy this into count per day number since the start.
 
 
 ```r
@@ -38,13 +36,7 @@ colnames(sumsByDateCode) <- c("count")
 
 sumsByDateCode$datecode <- rownames(sumsByDateCode)
 
-sumsByDate <- mutate(sumsByDateCode, date = mdy(substring(datecode,2)))
-
-#dailyCounts <- aggregate(sumsByDate$count, by=list(as.Date(sumsByDate$datetime)), FUN=tail, n=1)
-
-dailyCounts <- sumsByDate
-
-#colnames(dailyCounts) <- c("date", "count")
+dailyCounts <- mutate(sumsByDateCode, date = mdy(substring(datecode,2)))
 
 dailyCounts$day <- seq.int(nrow(dailyCounts))
 ```

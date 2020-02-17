@@ -373,8 +373,7 @@ summary {
 <p>Here I take the <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3582628/">R0 package</a> to estimate the reproduction number for COVID-19. NOTE: my aim is to investigate the R0 package rather than provide sound predictions of COVID-19’s future behaviour. In particular I have guessed the generation time.</p>
 <p>Load the data from the <a href="https://github.com/CSSEGISandData/COVID-19">2019 Novel Coronavirus COVID-19 (2019-nCoV) Data Repository by Johns Hopkins CSSE</a>:</p>
 <pre class="r"><code>confirmed &lt;- read.csv(url(&quot;https://raw.githubusercontent.com/CSSEGISandData/2019-nCoV/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv&quot;))</code></pre>
-<p>This data contains a row per state/province and a column per reported case numbers - on a particular date and time. There may be more than report per day at different times for a given location.</p>
-<p>Let’s transform this into a daily count using the last total count for each day:</p>
+<p>This data contains a row per state/province and a column per reported case numbers - on a particular date. Let’s tidy this into count per day number since the start.</p>
 <pre class="r"><code>sums &lt;- colSums(confirmed[,-match(c(&quot;Province.State&quot;, &quot;Country.Region&quot;, &quot;Lat&quot;, &quot;Long&quot;), names(confirmed))], na.rm=TRUE)
 
 sumsByDateCode &lt;- as.data.frame(t(t(sums)))
@@ -382,13 +381,7 @@ colnames(sumsByDateCode) &lt;- c(&quot;count&quot;)
 
 sumsByDateCode$datecode &lt;- rownames(sumsByDateCode)
 
-sumsByDate &lt;- mutate(sumsByDateCode, date = mdy(substring(datecode,2)))
-
-#dailyCounts &lt;- aggregate(sumsByDate$count, by=list(as.Date(sumsByDate$datetime)), FUN=tail, n=1)
-
-dailyCounts &lt;- sumsByDate
-
-#colnames(dailyCounts) &lt;- c(&quot;date&quot;, &quot;count&quot;)
+dailyCounts &lt;- mutate(sumsByDateCode, date = mdy(substring(datecode,2)))
 
 dailyCounts$day &lt;- seq.int(nrow(dailyCounts))</code></pre>
 <p>Now use the R0 package to estimate the reproduction number. I need a generation time, which we don’t have to hand, so I take the values use for SARS - a mean of 8.4, standard deviation 3.8 - as <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3816335/">described here</a>. The different estimation methods (time dependent, exponential growth etc.) are described there too.</p>
