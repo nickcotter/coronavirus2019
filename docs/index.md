@@ -1,7 +1,7 @@
 ---
 title: "R0 Estimation"
 author: "Nick Cotter"
-date: "2020-02-14"
+date: "2020-02-17"
 knit: (function(inputFile, encoding) { 
       rmarkdown::render(inputFile,
                         encoding=encoding, 
@@ -19,8 +19,10 @@ Here I take the [R0 package](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC358262
 Load the data from the [2019 Novel Coronavirus COVID-19 (2019-nCoV) Data Repository by Johns Hopkins CSSE](https://github.com/CSSEGISandData/COVID-19):
 
 
+
+
 ```r
-confirmed <- read.csv(url("https://raw.githubusercontent.com/CSSEGISandData/2019-nCoV/master/time_series/time_series_2019-ncov-Confirmed.csv"))
+confirmed <- read.csv(url("https://raw.githubusercontent.com/CSSEGISandData/2019-nCoV/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv"))
 ```
 
 This data contains a row per state/province and a column per reported case numbers - on a particular date and time. There may be more than report per day at different times for a given location. 
@@ -36,11 +38,13 @@ colnames(sumsByDateCode) <- c("count")
 
 sumsByDateCode$datecode <- rownames(sumsByDateCode)
 
-sumsByDate <- mutate(sumsByDateCode, datetime = mdy_hm(substring(datecode,2)))
+sumsByDate <- mutate(sumsByDateCode, date = mdy(substring(datecode,2)))
 
-dailyCounts <- aggregate(sumsByDate$count, by=list(as.Date(sumsByDate$datetime)), FUN=tail, n=1)
+#dailyCounts <- aggregate(sumsByDate$count, by=list(as.Date(sumsByDate$datetime)), FUN=tail, n=1)
 
-colnames(dailyCounts) <- c("date", "count")
+dailyCounts <- sumsByDate
+
+#colnames(dailyCounts) <- c("date", "count")
 
 dailyCounts$day <- seq.int(nrow(dailyCounts))
 ```
@@ -71,7 +75,7 @@ The time-dependent method seems to fit the best. Here are the RMSE values for th
 
        TD         EG         ML         SB
 ---------  ---------  ---------  ---------
- 3247.507   3979.594   8171.825   40738.54
+ 3802.336   5457.881   10265.95   42326.71
 
 
 Here is the range of the reproduction number thus estimated using the "time dependendent" method:
@@ -79,11 +83,11 @@ Here is the range of the reproduction number thus estimated using the "time depe
 
 ```
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##   2.444   2.482   3.177   4.863   5.264  17.533
+##   1.994   2.147   2.656   4.226   4.901  15.033
 ```
 
 Finally, here is a plot of estimated reproduction number (using the time-dependent method) over time:
 
 ![](/home/datascience/coronavirus2019/docs/index_files/figure-html/plot-estimates-1.png)<!-- -->
 
-At this time it seems to be tending towards some value between 2 and 3.
+At this time it seems to be tending towards approximately 2.
