@@ -127,4 +127,4 @@ abline(h=1, col="gray60")
 axis(2, at=seq(0:max(estimatedR)))
 ```
 
-At this time it seems to be tending towards approximately 2.
+At this time it seems to be tending towards 1.25
