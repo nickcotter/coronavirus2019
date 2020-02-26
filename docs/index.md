@@ -1,7 +1,7 @@
 ---
 title: "R0 Estimation"
 author: "Nick Cotter"
-date: "2020-02-24"
+date: "2020-02-26"
 knit: (function(inputFile, encoding) { 
       rmarkdown::render(inputFile,
                         encoding=encoding, 
@@ -67,7 +67,7 @@ The time-dependent method seems to fit the best. Here are the RMSE values for th
 
        TD         EG         ML   SB
 ---------  ---------  ---------  ---
- 4604.463   10955.66   15953.29   NA
+ 4500.802   12234.55   17184.78   NA
 
 
 Here is the range of the reproduction number thus estimated using the "time dependendent" method:
@@ -75,11 +75,11 @@ Here is the range of the reproduction number thus estimated using the "time depe
 
 ```
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##   1.253   1.470   2.060   3.450   3.982  15.023
+##   1.174   1.335   1.961   3.292   3.762  15.023
 ```
 
 Finally, here is a plot of estimated reproduction number (using the time-dependent method) over time:
 
 ![](/home/datascience/coronavirus2019/docs/index_files/figure-html/plot-estimates-1.png)<!-- -->
 
-At this time it seems to be tending towards 1.25
+The reproduction number has been reduced considerably over the last month or so, but is still above 1.

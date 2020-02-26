@@ -127,4 +127,4 @@ abline(h=1, col="gray60")
 axis(2, at=seq(0:max(estimatedR)))
 ```
 
-At this time it seems to be tending towards 1.25
+The reproduction number has been reduced considerably over the last month or so, but is still above 1.
