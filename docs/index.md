@@ -1,7 +1,7 @@
 ---
 title: "R0 Estimation"
 author: "Nick Cotter"
-date: "2020-02-26"
+date: "2020-02-28"
 knit: (function(inputFile, encoding) { 
       rmarkdown::render(inputFile,
                         encoding=encoding, 
@@ -60,14 +60,14 @@ est <- estimate.R(dailyCounts$count, methods=c("TD", "EG", "ML", "SB"), GT=mgt)
 
 We can plot the actual and predicted values using the different estimation methods:
 
-![](/home/datascience/coronavirus2019/docs/index_files/figure-html/plot-predictions-1.png)<!-- -->
+![](/home/nick/research/coronavirus2019/docs/index_files/figure-html/plot-predictions-1.png)<!-- -->
 
 The time-dependent method seems to fit the best. Here are the RMSE values for the different methods:
 
 
        TD         EG         ML   SB
 ---------  ---------  ---------  ---
- 4500.802   12234.55   17184.78   NA
+ 4280.313   13242.78   17881.44   NA
 
 
 Here is the range of the reproduction number thus estimated using the "time dependendent" method:
@@ -75,11 +75,11 @@ Here is the range of the reproduction number thus estimated using the "time depe
 
 ```
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##   1.174   1.335   1.961   3.292   3.762  15.023
+##   1.140   1.244   1.871   3.159   3.558  15.023
 ```
 
 Finally, here is a plot of estimated reproduction number (using the time-dependent method) over time:
 
-![](/home/datascience/coronavirus2019/docs/index_files/figure-html/plot-estimates-1.png)<!-- -->
+![](/home/nick/research/coronavirus2019/docs/index_files/figure-html/plot-estimates-1.png)<!-- -->
 
 The reproduction number has been reduced considerably over the last month or so, but is still above 1.
