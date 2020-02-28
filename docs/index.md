@@ -29,7 +29,9 @@ This data contains a row per state/province and a column per reported case numbe
 
 
 ```r
-sums <- colSums(confirmed[,-match(c("Province.State", "Country.Region", "Lat", "Long"), names(confirmed))], na.rm=TRUE)
+confirmed <- subset(confirmed, select = -c(Lat, Long))
+
+sums <- colSums(confirmed[,-match(c("Province.State", "Country.Region"), names(confirmed))], na.rm=TRUE)
 
 sumsByDateCode <- as.data.frame(t(t(sums)))
 colnames(sumsByDateCode) <- c("count")
