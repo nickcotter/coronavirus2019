@@ -1,7 +1,7 @@
 ---
 title: "R0 Estimation"
 author: "Nick Cotter"
-date: "2020-03-11"
+date: "2020-03-12"
 knit: (function(inputFile, encoding) { 
       rmarkdown::render(inputFile,
                         encoding=encoding, 
@@ -69,7 +69,7 @@ The time-dependent method seems to fit the best. Here are the RMSE values for th
 
        TD         EG         ML   SB
 ---------  ---------  ---------  ---
- 3876.756   14774.67   16312.47   NA
+ 3932.227   14620.55   16075.97   NA
 
 
 Here is the range of the reproduction number thus estimated using the "time dependendent" method:
@@ -77,7 +77,7 @@ Here is the range of the reproduction number thus estimated using the "time depe
 
 ```
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##   1.166   1.235   1.348   2.685   2.613  15.023
+##   1.168   1.247   1.359   2.664   2.552  15.023
 ```
 
 Finally, here is a plot of estimated reproduction number (using the time-dependent method) over time:
