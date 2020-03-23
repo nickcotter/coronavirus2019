@@ -1,7 +1,7 @@
 ---
 title: "R0 Estimation"
 author: "Nick Cotter"
-date: "2020-03-12"
+date: "2020-03-23"
 knit: (function(inputFile, encoding) { 
       rmarkdown::render(inputFile,
                         encoding=encoding, 
@@ -44,11 +44,11 @@ dailyCounts$day <- seq.int(nrow(dailyCounts))
 ```
 
 
-Now use the R0 package to estimate the reproduction number. I need a generation time, which we don't have to hand, so I take the values use for SARS - a mean of 8.4, standard deviation 3.8 - as [described here](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3816335/). The different estimation methods (time dependent, exponential growth etc.) are described there too.
+Now use the R0 package to estimate the reproduction number. I need a generation time, which we don't have to hand, so I take the values use for SARS - a mean of 5, standard deviation 1.9 - as [described here](https://www.medrxiv.org/content/10.1101/2020.03.08.20032946v1.full.pdf). The different estimation methods (time dependent, exponential growth etc.) are described there too.
 
 
 ```r
-mgt <- generation.time("gamma", c(8.4, 3.8))
+mgt <- generation.time("gamma", c(5, 1.9))
 
 est <- estimate.R(dailyCounts$count, methods=c("TD", "EG", "ML", "SB"), GT=mgt)
 ```
@@ -62,14 +62,14 @@ est <- estimate.R(dailyCounts$count, methods=c("TD", "EG", "ML", "SB"), GT=mgt)
 
 We can plot the actual and predicted values using the different estimation methods:
 
-![](/home/nick/research/coronavirus2019/docs/index_files/figure-html/plot-predictions-1.png)<!-- -->
+![](/Users/nick/work/extropy/coronavirus2019/docs/index_files/figure-html/plot-predictions-1.png)<!-- -->
 
 The time-dependent method seems to fit the best. Here are the RMSE values for the different methods:
 
 
        TD         EG         ML   SB
 ---------  ---------  ---------  ---
- 3932.227   14620.55   16075.97   NA
+ 2809.946   19230.84   18054.14   NA
 
 
 Here is the range of the reproduction number thus estimated using the "time dependendent" method:
@@ -77,11 +77,11 @@ Here is the range of the reproduction number thus estimated using the "time depe
 
 ```
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##   1.168   1.247   1.359   2.664   2.552  15.023
+##   1.062   1.160   1.474   1.889   1.654   9.150
 ```
 
 Finally, here is a plot of estimated reproduction number (using the time-dependent method) over time:
 
-![](/home/nick/research/coronavirus2019/docs/index_files/figure-html/plot-estimates-1.png)<!-- -->
+![](/Users/nick/work/extropy/coronavirus2019/docs/index_files/figure-html/plot-estimates-1.png)<!-- -->
 
 The reproduction number has been reduced considerably over the last month or so, but is still above 1.

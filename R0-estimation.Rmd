@@ -50,10 +50,10 @@ dailyCounts$day <- seq.int(nrow(dailyCounts))
 ```
 
 
-Now use the R0 package to estimate the reproduction number. I need a generation time, which we don't have to hand, so I take the values use for SARS - a mean of 8.4, standard deviation 3.8 - as [described here](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3816335/). The different estimation methods (time dependent, exponential growth etc.) are described there too.
+Now use the R0 package to estimate the reproduction number. I need a generation time, which we don't have to hand, so I take the values use for SARS - a mean of 5, standard deviation 1.9 - as [described here](https://www.medrxiv.org/content/10.1101/2020.03.08.20032946v1.full.pdf). The different estimation methods (time dependent, exponential growth etc.) are described there too.
 
 ```{r estimates, warning=FALSE, message=FALSE}
-mgt <- generation.time("gamma", c(8.4, 3.8))
+mgt <- generation.time("gamma", c(5, 1.9))
 
 est <- estimate.R(dailyCounts$count, methods=c("TD", "EG", "ML", "SB"), GT=mgt)
 ```
